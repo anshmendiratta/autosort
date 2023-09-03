@@ -3,6 +3,8 @@ use std::{
     path::Path,
 };
 
+use notify::{event::CreateKind, EventKind, RecursiveMode, Watcher};
+
 fn read_all_file_names() -> Vec<String> {
     let absolute_path = Path::new("/Users/anshmendiratta/Desktop/assignments/");
     let files = read_dir(absolute_path).unwrap();
@@ -58,14 +60,27 @@ fn place_file_in_dir(file: String, extension: String, folder: String) {
     );
     let move_string = format!(
         "/Users/anshmendiratta/Desktop/assignments/{}/{}{}",
-        folder, file, extension
+        folder, file, extension,
     );
     // println!("MOVING {} TO {}", &path_string, &move_string);
     rename(&path_string, &move_string).unwrap();
 }
 
 fn main() {
-    let files = read_all_file_names();
-    println!("Sorting...");
-    sort_files(files);
+    let mut watcher = notify::recommended_watcher(|event: Result<notify::Event, notify::Error>| {
+        if event.unwrap().kind == EventKind::Create(CreateKind::File) {
+            let files = read_all_file_names();
+            print!("Sorting... ");
+            sort_files(files);
+            println!("Finished");
+        }
+    })
+    .unwrap();
+
+    watcher
+        .watch(
+            Path::new("/Users/anshmendiratta/Desktop/assignments/"),
+            RecursiveMode::NonRecursive,
+        )
+        .unwrap();
 }
