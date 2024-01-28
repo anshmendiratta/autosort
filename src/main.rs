@@ -3,8 +3,10 @@ use std::{
     path::Path,
 };
 
+// hello world
 fn read_all_file_names() -> Vec<String> {
-    let absolute_path = Path::new("/Users/anshmendiratta/Desktop/assignments/");
+    // Enter the path of your directory
+    let absolute_path = Path::new("");
     let files = read_dir(absolute_path).unwrap();
 
     files
@@ -23,15 +25,7 @@ fn get_file_extension(file: String) -> Option<String> {
 }
 
 fn sort_files(files: Vec<String>) {
-    let folders = [
-        "ened",
-        "cs",
-        "math",
-        "phys",
-        "physl",
-        "publicspeaking",
-        "collegeculture",
-    ];
+    let folders = ["ened", "cs", "math", "chem", "cheml", "coop"];
     for file in files {
         let underscore_index = file.find("_");
         let dot_index = file.find('.').unwrap_or_else(|| {
@@ -52,15 +46,16 @@ fn sort_files(files: Vec<String>) {
 }
 
 fn place_file_in_dir(file: String, extension: String, folder: String) {
+    // Before the `{}{}`, enter the path of your parent directory
     let path_string = format!(
-        "/Users/anshmendiratta/Desktop/assignments/{}{}",
+        "{}{}",
         file, extension
     );
     let move_string = format!(
-        "/Users/anshmendiratta/Desktop/assignments/{}/{}{}",
+    // Before the `{}/{}{}`, enter the path of your parent directory
+        "{}/{}{}",
         folder, file, extension,
     );
-    // println!("MOVING {} TO {}", &path_string, &move_string);
     rename(&path_string, &move_string).unwrap();
 }
 
@@ -70,3 +65,5 @@ fn main() {
     sort_files(files);
     println!("Finished");
 }
+
+// TODO: Add ability to read for sorting folder attribute from files
